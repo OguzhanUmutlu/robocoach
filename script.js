@@ -85,14 +85,17 @@ const generateQuestion = lesson => {
     currentQuestion = {question, selected: null};
     updateExamInfo();
 };
+let lT = null;
 
 addEventListener("click", ev => {
-    if (ev.target.classList.contains("back")) {
+    let {target} = ev;
+    if (target === window) target = lT;
+    if (target.classList.contains("back")) {
         document.querySelector(".main").style.display = "block";
         document.querySelector(".question-container").innerHTML = "";
         return;
     }
-    if (ev.target.classList.contains("back-main")) {
+    if (target.classList.contains("back-main")) {
         lessonFilter = lessonFilter.split("-").reverse().slice(1).reverse().join("-");
         lessonSelect--;
         if (lessonSelect < 0) lessonSelect = 0;
@@ -100,9 +103,9 @@ addEventListener("click", ev => {
         document.querySelector(".back-main").style.display = lessonSelect ? "block" : "none";
         return;
     }
-    if (ev.target.classList.contains("lesson")) {
+    if (target.classList.contains("lesson")) {
         if (lessonFilter) lessonFilter += "-";
-        lessonFilter += ev.target.innerHTML;
+        lessonFilter += target.innerHTML;
         lessonSelect++;
         listLessons();
         const l = Object.keys(lessons).find(i => i === lessonFilter);
@@ -125,11 +128,11 @@ addEventListener("click", ev => {
         return;
     }
     if (!currentQuestion) {
-        if (ev.target.classList.contains("submit-answer") && !ev.target.classList.contains("disabled"))
+        if (target.classList.contains("submit-answer") && !target.classList.contains("disabled"))
             generateQuestion(lastQuestionType)
         return;
     }
-    if (ev.target.classList.contains("show-answer")) {
+    if (target.classList.contains("show-answer")) {
         document.querySelectorAll(".option-name").forEach((i, j) => {
             if (j === currentQuestion.question.options.indexOf(currentQuestion.question.answer)) {
                 i.style.border = "3px solid #f5ea42";
@@ -138,10 +141,10 @@ addEventListener("click", ev => {
         });
         document.querySelector(".submit-answer").innerHTML = "Next";
         document.querySelector(".submit-answer").classList.remove("disabled");
-        ev.target.remove();
+        target.remove();
         currentQuestion = null;
     }
-    if (ev.target.classList.contains("submit-answer") && !ev.target.classList.contains("disabled")) {
+    if (target.classList.contains("submit-answer") && !target.classList.contains("disabled")) {
         if (currentQuestion.selected === currentQuestion.question.answer && examInfo)
             examInfo.points += examInfo.pointPerQuestion;
         document.querySelectorAll(".option-name").forEach((i, j) => {
@@ -155,11 +158,11 @@ addEventListener("click", ev => {
             }
         });
         updateExamInfo();
-        ev.target.innerHTML = "Next";
+        target.innerHTML = "Next";
         currentQuestion = null;
         return;
     }
-    let par = ev.target;
+    let par = target;
     if (par.classList.contains("option")) par = par.children.item(0);
     if (!par.classList.contains("option-name")) return;
     const ch = !!par.style.backgroundColor;
@@ -170,6 +173,24 @@ addEventListener("click", ev => {
         currentQuestion.selected = currentQuestion.question.options[par.getAttribute("data-option-index") * 1];
         currentQuestion.selectedIndex = par.getAttribute("data-option-index") * 1;
     } else document.querySelector(".submit-answer").classList.add("disabled");
+});
+addEventListener("keydown", ev => {
+    if (currentQuestion) {
+        if (ev.key === "Enter") {
+            lT = document.querySelector(".question-container > .submit-answer");
+            dispatchEvent(new MouseEvent("click"));
+            return;
+        }
+        const index = {a: 0, b: 1, c: 2, d: 3, e: 4}[ev.key.toLowerCase()];
+        if (typeof index !== "number") return;
+        lT = document.querySelector("[data-option-index='" + index + "']");
+        dispatchEvent(new MouseEvent("click"));
+    } else if (document.querySelector(".question-container").innerHTML) {
+        if (ev.key === "Enter") {
+            lT = document.querySelector(".question-container > .submit-answer");
+            dispatchEvent(new MouseEvent("click"));
+        }
+    }
 });
 let lessonSelect = 0;
 let lessonFilter = "";
