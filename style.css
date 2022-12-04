@@ -151,6 +151,9 @@ body {
     width: max-content;
     cursor: pointer;
     transition: filter .5s, scale .5s, background-color .5s;
+    margin-left: 50%;
+    translate: -50%;
+    margin-bottom: 10px;
 }
 
 .lessons > .lesson:hover {

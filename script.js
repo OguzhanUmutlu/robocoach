@@ -9,6 +9,43 @@ const mathHelper = {
     acot: {"undefined": "0", "√3": "30", "1": "45", "√3/3": "60", "0": "90"},
 };
 
+const morse = {
+    letters: [
+        ["A", "•–"], ["N", "–•"],// ["Ö", "–––•"],
+        ["B", "–•••"], ["O", "–––"],// ["Ü", "••––"],
+        ["C", "–•–•"], ["P", "•––•"],// ["Ç", "––––"],
+        ["D", "–••"], ["Q", "––•–"],// ["Ş", "•••–•"],
+        ["E", "•"], ["R", "•–•"],
+        ["F", "••–•"], ["S", "•••"],
+        ["G", "––•"], ["T", "–"],
+        ["H", "••••"], ["U", "••–"],
+        ["I", "••"], ["V", "•••–"],
+        ["J", "•–––"], ["W", "•––"],
+        ["K", "–•–"], ["X", "–••–"],
+        ["L", "•–••"], ["Y", "–•––"],
+        ["M", "––"], ["Z", "––••"]
+    ],
+    numbers: [
+        ["0", "–––––"],
+        ["1", "•––––"],
+        ["2", "••–––"],
+        ["3", "•••––"],
+        ["4", "••••–"],
+        ["5", "•••••"],
+        ["6", "–••••"],
+        ["7", "––•••"],
+        ["8", "–––••"],
+        ["9", "––––•"]
+    ],
+    symbols: [
+        [".", "•–•–•–"],
+        [",", "––••––"],
+        ["?", "••––••"],
+        ["-", "–••••–"],
+        ["/", "–••–•"]
+    ]
+};
+
 const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 const arr_rand = arr => arr[rand(0, arr.length - 1)];
 const arr_shuffle = arr => {
@@ -48,7 +85,109 @@ const lessons = {
         /*() => {
             // conversions
         }*/
-    ]
+    ],
+    "Morse-Letters": [
+        () => {
+            // Letters
+            const selected = arr_rand(morse.letters); // 0 -> letter, 1 -> answer
+            return {
+                title: `What's '${selected[0]}' in Morse?`,
+                options: arr_shuffle([...arr_shuffle(morse.letters.filter(i => i !== selected)).slice(0, 4).map(i => i[1]), selected[1]]),
+                answer: selected[1]
+            };
+        }
+    ],
+    "Morse-Numbers": [
+        () => {
+            // Numbers
+            const selected = arr_rand(morse.numbers); // 0 -> number, 1 -> answer
+            return {
+                title: `What's '${selected[0]}' in Morse?`,
+                options: arr_shuffle([...arr_shuffle(morse.numbers.filter(i => i !== selected)).slice(0, 4).map(i => i[1]), selected[1]]),
+                answer: selected[1]
+            };
+        }
+    ],
+    "Morse-Symbols": [
+        () => {
+            // Symbols
+            const selected = arr_rand(morse.symbols); // 0 -> symbol, 1 -> answer
+            return {
+                title: `What's '${selected[0]}' in Morse?`,
+                options: arr_shuffle([...arr_shuffle(morse.symbols.filter(i => i !== selected)).slice(0, 4).map(i => i[1]), selected[1]]),
+                answer: selected[1]
+            };
+        }
+    ],
+    "Morse-All": [
+        () => {
+            // All
+            const all = [...morse.letters, ...morse.numbers, ...morse.symbols];
+            const selected = arr_rand(all); // 0 -> symbol, 1 -> answer
+            return {
+                title: `What's '${selected[0]}' in Morse?`,
+                options: arr_shuffle([...arr_shuffle(all.filter(i => i !== selected)).slice(0, 4).map(i => i[1]), selected[1]]),
+                answer: selected[1]
+            };
+        }
+    ],
+    "Morse-Reversed Letters": [
+        () => {
+            // Reversed Letters
+            const selected = arr_rand(morse.letters); // 0 -> answer, 1 -> morse
+            return {
+                title: `What's '${selected[1]}'?`,
+                options: arr_shuffle([...arr_shuffle(morse.letters.filter(i => i !== selected)).slice(0, 4).map(i => i[0]), selected[0]]),
+                answer: selected[0]
+            };
+        }
+    ],
+    "Morse-Reversed Numbers": [
+        () => {
+            // Reversed Numbers
+            const selected = arr_rand(morse.numbers); // 0 -> answer, 1 -> morse
+            return {
+                title: `What's '${selected[1]}'?`,
+                options: arr_shuffle([...arr_shuffle(morse.numbers.filter(i => i !== selected)).slice(0, 4).map(i => i[0]), selected[0]]),
+                answer: selected[0]
+            };
+        }
+    ],
+    "Morse-Reversed Symbols": [
+        () => {
+            // Reversed Symbols
+            const selected = arr_rand(morse.symbols); // 0 -> answer, 1 -> morse
+            return {
+                title: `What's '${selected[1]}'?`,
+                options: arr_shuffle([...arr_shuffle(morse.symbols.filter(i => i !== selected)).slice(0, 4).map(i => i[0]), selected[0]]),
+                answer: selected[0]
+            };
+        }
+    ],
+    "Morse-Reversed All": [
+        () => {
+            // Reversed Numbers
+            const all = [...morse.letters, ...morse.numbers, ...morse.symbols];
+            const selected = arr_rand(all); // 0 -> answer, 1 -> morse
+            return {
+                title: `What's '${selected[1]}'?`,
+                options: arr_shuffle([...arr_shuffle(all.filter(i => i !== selected)).slice(0, 4).map(i => i[0]), selected[0]]),
+                answer: selected[0]
+            };
+        }
+    ],
+    /*"Morse-Sentences": [
+        () => {
+            // Sentences
+            const all = [...morse.letters, ...morse.numbers, ...morse.symbols];
+            const selected = arr_rand(all); // 0 -> answer, 1 -> morse
+            return {
+                title: `What's '${selected[1]}'?`,
+                options: arr_shuffle([...arr_shuffle(all.filter(i => i !== selected)).slice(0, 4).map(i => i[0]), selected[0]]),
+                answer: selected[0]
+            };
+        }
+    ],*/
 };
 
 let currentQuestion = null;
